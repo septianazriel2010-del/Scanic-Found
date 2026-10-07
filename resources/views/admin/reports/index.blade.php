@@ -8,9 +8,14 @@
     <div class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
         @forelse ($itemReports as $report)
             <div class="flex items-center justify-between px-4 py-3">
-                <a href="{{ route('items.show', $report) }}" class="hover:text-brand-600">
-                    <p class="font-medium text-gray-800">{{ $report->title }}</p>
-                    <p class="text-xs text-gray-400">Oleh {{ $report->user->name }} &middot; {{ $report->created_at->diffForHumans() }}</p>
+                <a href="{{ route('items.show', $report) }}" class="flex min-w-0 items-center gap-3 hover:text-brand-600">
+                    @if ($report->photo_url)
+                        <img src="{{ $report->photo_url }}" alt="" class="h-12 w-12 shrink-0 rounded border border-gray-200 object-cover">
+                    @endif
+                    <span class="min-w-0">
+                        <span class="block font-medium text-gray-800">{{ $report->title }}</span>
+                        <span class="block text-xs text-gray-400">Oleh {{ $report->user->name }} &middot; {{ $report->created_at->diffForHumans() }}</span>
+                    </span>
                 </a>
 
                 <div class="flex items-center gap-3">

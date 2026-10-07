@@ -15,7 +15,7 @@ class ItemReportService
     public function create(array $data, int $userId, ?UploadedFile $photo): ItemReport
     {
         if ($photo) {
-            $data['photo_path'] = $photo->store('item-reports', 'public');
+            $data['photo_path'] = $photo->store('item-reports', config('filesystems.default'));
         }
 
         $data['user_id'] = $userId;
@@ -29,9 +29,9 @@ class ItemReportService
         if ($photo) {
             // Hapus foto lama supaya storage tidak menumpuk file yatim.
             if ($itemReport->photo_path) {
-                Storage::disk('public')->delete($itemReport->photo_path);
+                Storage::disk(config('filesystems.default'))->delete($itemReport->photo_path);
             }
-            $data['photo_path'] = $photo->store('item-reports', 'public');
+            $data['photo_path'] = $photo->store('item-reports', config('filesystems.default'));
         }
 
         $itemReport->update($data);
@@ -42,7 +42,7 @@ class ItemReportService
     public function delete(ItemReport $itemReport): void
     {
         if ($itemReport->photo_path) {
-            Storage::disk('public')->delete($itemReport->photo_path);
+            Storage::disk(config('filesystems.default'))->delete($itemReport->photo_path);
         }
 
         $itemReport->delete();

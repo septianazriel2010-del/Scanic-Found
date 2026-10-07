@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+	input,
+	select,
+	textarea,
+	button {
+		border: 1px solid #d1d5db;
+	}
+
+	input:focus,
+	select:focus,
+	textarea:focus,
+	button:focus-visible {
+		border-color: #0d9488;
+	}
+}

@@ -16,7 +16,13 @@ class ClaimService
      * Mencegah user mengklaim laporan miliknya sendiri, dan mencegah
      * klaim dobel yang masih pending dari user yang sama.
      */
-    public function submit(ItemReport $itemReport, User $claimant, string $proofDetails): Claim
+    public function submit(
+        ItemReport $itemReport,
+        User $claimant,
+        string $fullName,
+        string $classPosition,
+        string $proofDetails,
+    ): Claim
     {
         if ($itemReport->status !== ItemReport::STATUS_OPEN) {
             throw new RuntimeException('Laporan ini sudah tidak bisa diklaim (status: '.$itemReport->status.').');
@@ -38,6 +44,8 @@ class ClaimService
         return Claim::create([
             'item_report_id' => $itemReport->id,
             'claimant_id' => $claimant->id,
+            'claimant_full_name' => $fullName,
+            'claimant_class_position' => $classPosition,
             'proof_details' => $proofDetails,
             'status' => Claim::STATUS_PENDING,
         ]);

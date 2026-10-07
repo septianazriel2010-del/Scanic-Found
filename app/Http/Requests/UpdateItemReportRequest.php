@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Models\ItemReport;
 
 class UpdateItemReportRequest extends FormRequest
 {
@@ -18,8 +20,8 @@ class UpdateItemReportRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:2000'],
-            'category' => ['required', 'string', 'max:100'],
-            'location' => ['required', 'string', 'max:150'],
+            'category' => ['required', 'string', Rule::in(array_merge(ItemReport::CATEGORIES, [$this->route('itemReport')->category]))],
+            'location' => ['required', 'string', Rule::in(array_merge(array_merge(...array_values(ItemReport::LOCATION_GROUPS)), [$this->route('itemReport')->location]))],
             'incident_date' => ['required', 'date', 'before_or_equal:today'],
             'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'status' => ['required', 'in:open,claimed,returned,closed'],

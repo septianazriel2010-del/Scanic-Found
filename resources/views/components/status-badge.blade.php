@@ -17,7 +17,7 @@
         'claimed' => 'Diklaim',
         'returned' => 'Dikembalikan',
         'closed' => 'Ditutup',
-        'pending' => 'Menunggu',
+        'pending' => 'Menunggu Verifikasi',
         'approved' => 'Disetujui',
         'rejected' => 'Ditolak',
         'cancelled' => 'Dibatalkan',

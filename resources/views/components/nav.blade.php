@@ -1,6 +1,6 @@
 <header class="bg-white border-b border-gray-200">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="{{ route('items.index') }}" class="font-bold text-lg text-brand-600">
+        <a href="{{ route('items.index') }}" class="whitespace-nowrap text-sm font-semibold text-gray-800 sm:text-base">
             SCANIC TRACE
         </a>
 
@@ -13,6 +13,7 @@
 
                 @if (auth()->user()->isAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:text-brand-600">Admin</a>
+                    <a href="{{ route('admin.users.index') }}" class="text-gray-600 hover:text-brand-600">Kelola Pengguna</a>
                 @endif
 
                 <span class="text-gray-300">|</span>

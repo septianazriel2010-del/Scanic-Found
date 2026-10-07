@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Storage;
 
 class ItemReport extends Model
 {
@@ -20,6 +21,46 @@ class ItemReport extends Model
     public const STATUS_CLAIMED = 'claimed';
     public const STATUS_RETURNED = 'returned';
     public const STATUS_CLOSED = 'closed';
+
+    public const CATEGORIES = ['Elektronik', 'Dompet', 'Alat Tulis', 'Pakaian', 'Kartu Pelajar', 'Buku'];
+
+    public const LOCATION_GROUPS = [
+        'Administrasi & Pimpinan' => [
+            'Ruang Kepala Sekolah',
+            'Ruang Guru',
+            'Ruang Tata Usaha (TU)',
+            'Ruang Wakil Kepala Sekolah',
+            'Ruang Bimbingan Konseling (BK)',
+            'Ruang Bendahara',
+        ],
+        'Belajar & Praktik' => [
+            'Kelas X PPLG 1',
+            'Kelas X PPLG 2',
+            'Kelas X PPLG 3',
+            'Kelas XI PPLG 1',
+            'Kelas XI PPLG 2',
+            'Kelas XI PPLG 3',
+            'Kelas XII PPLG 1',
+            'Kelas XII PPLG 2',
+            'Kelas XII PPLG 3',
+            'Perpustakaan',
+            'Ruang Aula',
+        ],
+        'Fasilitas Pendukung' => [
+            'Ruang UKS',
+            'Ruang OSIS',
+            'Masjid / Mushalla',
+            'Kantin',
+            'Toilet / WC',
+        ],
+        'Area Luar & Olahraga' => [
+            'Lapangan',
+            'Halaman Sekolah',
+            'Area Parkir',
+            'Taman',
+            'Pos Satpam',
+        ],
+    ];
 
     protected $fillable = [
         'user_id',
@@ -38,6 +79,24 @@ class ItemReport extends Model
         return [
             'incident_date' => 'date',
         ];
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        if (! $this->photo_path) {
+            return null;
+        }
+
+        $diskNames = array_unique([config('filesystems.default'), 'public']);
+
+        foreach ($diskNames as $diskName) {
+            $disk = Storage::disk($diskName);
+            if ($disk->exists($this->photo_path)) {
+                return $disk->url($this->photo_path);
+            }
+        }
+
+        return null;
     }
 
     /** Pelapor (siswa/guru/staf/admin) yang membuat laporan ini. */

@@ -21,6 +21,9 @@ class ItemReportController extends Controller
     {
         $itemReports = ItemReport::query()
             ->with('user')
+            ->withExists(['claims as has_pending_claim' => function ($query) {
+                $query->where('status', \App\Models\Claim::STATUS_PENDING);
+            }])
             ->type($request->string('type')->toString() ?: null)
             ->category($request->string('category')->toString() ?: null)
             ->location($request->string('location')->toString() ?: null)

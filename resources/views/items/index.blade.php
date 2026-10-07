@@ -16,15 +16,15 @@
     <form method="GET" action="{{ route('items.index') }}"
           class="bg-white border border-gray-200 rounded-xl p-4 mb-6 grid grid-cols-1 sm:grid-cols-5 gap-3">
         <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul/deskripsi..."
-               class="sm:col-span-2 rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+               class="sm:col-span-2 rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500">
 
-        <select name="type" class="rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+        <select name="type" class="rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500">
             <option value="">Semua Jenis</option>
             <option value="lost" {{ request('type') === 'lost' ? 'selected' : '' }}>Hilang</option>
             <option value="found" {{ request('type') === 'found' ? 'selected' : '' }}>Ditemukan</option>
         </select>
 
-        <select name="category" class="rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+        <select name="category" class="rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500">
             <option value="">Semua Kategori</option>
             @foreach ($categories as $category)
                 <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>
@@ -33,7 +33,7 @@
             @endforeach
         </select>
 
-        <select name="location" class="rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500">
+        <select name="location" class="rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500">
             <option value="">Semua Lokasi</option>
             @foreach ($locations as $location)
                 <option value="{{ $location }}" {{ request('location') === $location ? 'selected' : '' }}>
@@ -59,8 +59,17 @@
                         <span class="text-xs font-medium px-2 py-1 rounded-full {{ $report->type === 'lost' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }}">
                             {{ $report->type === 'lost' ? 'Hilang' : 'Ditemukan' }}
                         </span>
-                        <x-status-badge :status="$report->status" />
+                        @if ($report->status === 'open' && $report->has_pending_claim)
+                            <x-status-badge status="pending" />
+                        @else
+                            <x-status-badge :status="$report->status" />
+                        @endif
                     </div>
+
+                    @if ($report->photo_url)
+                        <img src="{{ $report->photo_url }}" alt="Foto {{ $report->title }}"
+                             class="mb-3 h-36 w-full rounded-lg border border-gray-200 object-cover">
+                    @endif
 
                     <h2 class="font-semibold text-gray-800 mb-1">{{ $report->title }}</h2>
                     <p class="text-sm text-gray-500 line-clamp-2 mb-2">{{ $report->description }}</p>

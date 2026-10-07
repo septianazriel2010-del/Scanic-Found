@@ -7,7 +7,7 @@
 
     <form method="GET" class="mb-4">
         <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari nama/email..."
-               class="rounded-lg border-gray-300 text-sm focus:border-brand-500 focus:ring-brand-500 w-full sm:w-80">
+               class="rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500 w-full sm:w-80">
     </form>
 
     <div class="bg-white border border-gray-200 rounded-xl overflow-x-auto">
@@ -29,7 +29,7 @@
                             <form method="POST" action="{{ route('admin.users.update-role', $user) }}" class="flex items-center gap-2">
                                 @csrf
                                 @method('PATCH')
-                                <select name="role" class="rounded-lg border-gray-300 text-xs focus:border-brand-500 focus:ring-brand-500">
+                                <select name="role" class="rounded-lg text-xs focus:border-brand-500 focus:ring-brand-500">
                                     @foreach (['student', 'teacher', 'staff', 'admin'] as $role)
                                         <option value="{{ $role }}" {{ $user->role === $role ? 'selected' : '' }}>{{ ucfirst($role) }}</option>
                                     @endforeach

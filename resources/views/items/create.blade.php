@@ -11,7 +11,7 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Jenis Laporan</label>
-            <select name="type" required class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+            <select name="type" required class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">
                 <option value="lost" {{ old('type') === 'lost' ? 'selected' : '' }}>Barang Hilang</option>
                 <option value="found" {{ old('type') === 'found' ? 'selected' : '' }}>Barang Ditemukan</option>
             </select>
@@ -20,32 +20,44 @@
         <div>
             <label class="block text-sm font-medium mb-1">Judul Barang</label>
             <input type="text" name="title" value="{{ old('title') }}" required
-                   class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                   class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">
         </div>
 
         <div>
             <label class="block text-sm font-medium mb-1">Deskripsi</label>
             <textarea name="description" rows="4" required
-                      class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">{{ old('description') }}</textarea>
+                      class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">{{ old('description') }}</textarea>
         </div>
 
         <div class="grid grid-cols-2 gap-4">
             <div>
                 <label class="block text-sm font-medium mb-1">Kategori</label>
-                <input type="text" name="category" value="{{ old('category') }}" placeholder="Elektronik, Dompet, dll"
-                       required class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                <select name="category" required class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">
+                    <option value="">Pilih kategori</option>
+                    @foreach (\App\Models\ItemReport::CATEGORIES as $category)
+                        <option value="{{ $category }}" {{ old('category') === $category ? 'selected' : '' }}>{{ $category }}</option>
+                    @endforeach
+                </select>
             </div>
             <div>
                 <label class="block text-sm font-medium mb-1">Lokasi</label>
-                <input type="text" name="location" value="{{ old('location') }}" placeholder="Kantin, Lab Komputer, dll"
-                       required class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                <select name="location" required class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">
+                    <option value="">Pilih lokasi</option>
+                    @foreach (\App\Models\ItemReport::LOCATION_GROUPS as $group => $locations)
+                        <optgroup label="{{ $group }}">
+                            @foreach ($locations as $location)
+                                <option value="{{ $location }}" {{ old('location') === $location ? 'selected' : '' }}>{{ $location }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
             </div>
         </div>
 
         <div>
             <label class="block text-sm font-medium mb-1">Tanggal Kejadian</label>
             <input type="date" name="incident_date" value="{{ old('incident_date') }}" required
-                   class="w-full rounded-lg border-gray-300 focus:border-brand-500 focus:ring-brand-500">
+                   class="w-full rounded-lg focus:border-brand-500 focus:ring-brand-500">
         </div>
 
         <div>

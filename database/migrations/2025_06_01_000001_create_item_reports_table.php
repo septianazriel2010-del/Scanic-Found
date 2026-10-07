@@ -48,8 +48,10 @@ return new class extends Migration
 
             // Index gabungan untuk filter yang sering dipakai bersamaan
             $table->index(['type', 'status']);
-            // Fulltext sederhana untuk pencarian judul+deskripsi (MySQL)
-            $table->fullText(['title', 'description']);
+            // Fulltext sederhana untuk pencarian judul+deskripsi (MySQL/PostgreSQL).
+            if (Schema::getConnection()->getDriverName() !== 'sqlite') {
+                $table->fullText(['title', 'description']);
+            }
         });
     }
 

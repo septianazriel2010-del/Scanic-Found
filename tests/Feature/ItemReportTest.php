@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\ItemReport;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ItemReportTest extends TestCase
@@ -23,6 +25,20 @@ class ItemReportTest extends TestCase
         $this->get(route('items.create'))->assertRedirect(route('login'));
     }
 
+    public function test_report_form_rejects_category_or_location_outside_select_options(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->from(route('items.create'))->post(route('items.store'), [
+            'type' => 'lost',
+            'title' => 'Kunci motor',
+            'description' => 'Kunci motor dengan gantungan merah.',
+            'category' => 'Kategori typo',
+            'location' => 'Lokasi typo',
+            'incident_date' => now()->toDateString(),
+        ])->assertSessionHasErrors(['category', 'location']);
+    }
+
     public function test_only_owner_can_update_their_report(): void
     {
         $owner = User::factory()->create();
@@ -38,5 +54,56 @@ class ItemReportTest extends TestCase
         $this->actingAs($otherUser)
             ->get(route('items.edit', $report))
             ->assertForbidden();
+    }
+
+    public function test_uploaded_photo_is_saved_and_rendered_on_report_page(): void
+    {
+        $disk = config('filesystems.default');
+        Storage::fake($disk);
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->post(route('items.store'), [
+            'type' => 'lost',
+            'title' => 'Dompet hitam',
+            'description' => 'Dompet kecil dengan kartu pelajar.',
+            'category' => 'Dompet',
+            'location' => 'Kantin',
+            'incident_date' => now()->toDateString(),
+            'photo' => UploadedFile::fake()->create('dompet.jpg', 100, 'image/jpeg'),
+        ])->assertRedirect();
+
+        $report = ItemReport::latest()->firstOrFail();
+        Storage::disk($disk)->assertExists($report->photo_path);
+
+        $this->get(route('items.show', $report))
+            ->assertOk()
+            ->assertSee($report->photo_url);
+
+        $this->get(route('items.index'))
+            ->assertOk()
+            ->assertSee('src="'.$report->photo_url.'"', false)
+            ->assertDontSee('>'.$report->photo_path.'<', false);
+    }
+
+    public function test_pending_claim_is_visible_and_hides_regular_claim_action(): void
+    {
+        $reporter = User::factory()->create();
+        $claimant = User::factory()->create();
+        $report = ItemReport::factory()->create([
+            'user_id' => $reporter->id,
+            'type' => ItemReport::TYPE_FOUND,
+        ]);
+
+        $report->claims()->create([
+            'claimant_id' => $claimant->id,
+            'proof_details' => 'Ada ciri khusus yang bisa diverifikasi.',
+            'status' => \App\Models\Claim::STATUS_PENDING,
+        ]);
+
+        $this->get(route('items.show', $report))
+            ->assertOk()
+            ->assertSee('Menunggu Verifikasi')
+            ->assertSee('Klaim telah diajukan dan sedang menunggu verifikasi admin.')
+            ->assertDontSee('Ajukan Klaim');
     }
 }

@@ -19,7 +19,9 @@
             <a href="{{ route('admin.claims.show', $claim) }}" class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
                 <div>
                     <p class="font-medium text-gray-800">{{ $claim->itemReport->title }}</p>
-                    <p class="text-xs text-gray-400">Diajukan oleh {{ $claim->claimant->name }} &middot; {{ $claim->created_at->diffForHumans() }}</p>
+                    <p class="text-xs text-gray-500">Diajukan oleh {{ $claim->claimant_full_name ?: $claim->claimant->name }}
+                        <span class="font-medium text-gray-700">({{ ucfirst($claim->claimant->role) }})</span>
+                        &middot; {{ $claim->created_at->diffForHumans() }}</p>
                 </div>
                 <x-status-badge :status="$claim->status" />
             </a>

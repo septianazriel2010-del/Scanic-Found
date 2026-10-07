@@ -19,6 +19,8 @@ class Claim extends Model
     protected $fillable = [
         'item_report_id',
         'claimant_id',
+        'claimant_full_name',
+        'claimant_class_position',
         'proof_details',
         'status',
         'reviewed_by',

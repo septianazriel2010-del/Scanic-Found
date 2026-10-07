@@ -14,7 +14,14 @@
         <dl class="grid grid-cols-2 gap-3 text-sm">
             <div>
                 <dt class="text-gray-400">Pengaju Klaim</dt>
-                <dd class="font-medium">{{ $claim->claimant->name }} ({{ $claim->claimant->email }})</dd>
+                <dd class="font-medium">
+                    {{ $claim->claimant_full_name ?: $claim->claimant->name }} ({{ $claim->claimant->email }})
+                    <span class="block text-brand-700">Role akun: {{ ucfirst($claim->claimant->role) }}</span>
+                </dd>
+            </div>
+            <div>
+                <dt class="text-gray-400">Kelas / Jabatan</dt>
+                <dd class="font-medium">{{ $claim->claimant_class_position ?: 'Tidak tersedia (klaim lama)' }}</dd>
             </div>
             <div>
                 <dt class="text-gray-400">Pelapor Barang</dt>
@@ -23,7 +30,7 @@
         </dl>
 
         <div>
-            <p class="text-sm text-gray-400 mb-1">Bukti Kepemilikan</p>
+            <p class="text-sm text-gray-400 mb-1">Deskripsi Detail Barang</p>
             <p class="text-gray-700 whitespace-pre-line">{{ $claim->proof_details }}</p>
         </div>
 

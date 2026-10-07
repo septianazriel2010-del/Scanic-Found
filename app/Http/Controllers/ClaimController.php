@@ -53,6 +53,8 @@ class ClaimController extends Controller
             $this->claimService->submit(
                 $itemReport,
                 $request->user(),
+                $request->validated('claimant_full_name'),
+                $request->validated('claimant_class_position'),
                 $request->validated('proof_details'),
             );
         } catch (RuntimeException $e) {

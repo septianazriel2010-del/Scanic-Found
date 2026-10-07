@@ -27,11 +27,11 @@ class UserController extends Controller
     /** Ubah role user (misal: promosikan staf jadi admin). */
     public function updateRole(Request $request, User $user): RedirectResponse
     {
-        $request->validate([
+        $validated = $request->validate([
             'role' => ['required', 'in:student,teacher,staff,admin'],
         ]);
 
-        $user->update(['role' => $request->validated()['role']]);
+        $user->update(['role' => $validated['role']]);
 
         return back()->with('status', "Role {$user->name} berhasil diubah menjadi {$user->role}.");
     }
