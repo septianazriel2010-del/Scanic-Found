@@ -24,6 +24,10 @@ class ClaimService
         string $proofDetails,
     ): Claim
     {
+        if ($itemReport->type !== ItemReport::TYPE_FOUND) {
+            throw new RuntimeException('Klaim hanya bisa diajukan untuk barang yang ditemukan. Jika Anda menemukan barang yang dilaporkan hilang, buat laporan Barang Ditemukan.');
+        }
+
         if ($itemReport->status !== ItemReport::STATUS_OPEN) {
             throw new RuntimeException('Laporan ini sudah tidak bisa diklaim (status: '.$itemReport->status.').');
         }

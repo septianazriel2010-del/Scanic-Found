@@ -32,6 +32,11 @@ class ClaimController extends Controller
     {
         $this->authorize('create', Claim::class);
 
+        if ($itemReport->type !== ItemReport::TYPE_FOUND) {
+            return redirect()->route('items.show', $itemReport)
+                ->with('status', 'Klaim hanya bisa diajukan untuk laporan Barang Ditemukan. Jika Anda menemukan barang yang dilaporkan hilang, buat laporan Barang Ditemukan.');
+        }
+
         if ($itemReport->status !== ItemReport::STATUS_OPEN) {
             return redirect()->route('items.show', $itemReport)
                 ->with('status', 'Laporan ini sudah tidak bisa diklaim.');
@@ -48,6 +53,11 @@ class ClaimController extends Controller
     public function store(StoreClaimRequest $request, ItemReport $itemReport): RedirectResponse
     {
         $this->authorize('create', Claim::class);
+
+        if ($itemReport->type !== ItemReport::TYPE_FOUND) {
+            return redirect()->route('items.show', $itemReport)
+                ->with('status', 'Klaim hanya bisa diajukan untuk laporan Barang Ditemukan. Jika Anda menemukan barang yang dilaporkan hilang, buat laporan Barang Ditemukan.');
+        }
 
         try {
             $this->claimService->submit(

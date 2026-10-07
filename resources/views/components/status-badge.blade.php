@@ -1,4 +1,4 @@
-@props(['status'])
+@props(['status', 'label' => null])
 
 @php
     $colors = [
@@ -25,5 +25,5 @@
 @endphp
 
 <span {{ $attributes->merge(['class' => 'inline-block text-xs font-medium px-2 py-1 rounded-full border ' . ($colors[$status] ?? 'bg-gray-100 text-gray-600 border-gray-200')]) }}>
-    {{ $labels[$status] ?? $status }}
+    {{ $label ?? $labels[$status] ?? $status }}
 </span>

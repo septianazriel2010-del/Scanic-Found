@@ -57,6 +57,36 @@ class ClaimAuthorizationTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_lost_report_cannot_be_claimed_and_explains_found_report_flow(): void
+    {
+        $reporter = User::factory()->create();
+        $claimant = User::factory()->teacher()->create();
+        $report = ItemReport::factory()->create([
+            'user_id' => $reporter->id,
+            'type' => ItemReport::TYPE_LOST,
+            'status' => ItemReport::STATUS_OPEN,
+        ]);
+
+        $this->actingAs($claimant)
+            ->get(route('items.show', $report))
+            ->assertOk()
+            ->assertSee('Masih Dicari')
+            ->assertSee('Laporkan Barang Ditemukan')
+            ->assertDontSee('Ajukan Klaim');
+
+        $this->get(route('claims.create', $report))
+            ->assertRedirect(route('items.show', $report))
+            ->assertSessionHas('status');
+
+        $this->post(route('claims.store', $report), [
+            'claimant_full_name' => 'Guru Contoh',
+            'claimant_class_position' => 'Guru',
+            'proof_details' => 'Saya menemukan barang ini dan dapat menyebutkan ciri-cirinya.',
+        ])->assertRedirect(route('items.show', $report));
+
+        $this->assertDatabaseMissing('claims', ['item_report_id' => $report->id]);
+    }
+
     public function test_claim_identity_fields_are_required_and_current_role_is_visible_to_admin(): void
     {
         $reporter = User::factory()->create();

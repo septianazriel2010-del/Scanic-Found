@@ -13,6 +13,8 @@
             @php($hasPendingClaim = $itemReport->claims->contains('status', \App\Models\Claim::STATUS_PENDING))
             @if ($itemReport->status === 'open' && $hasPendingClaim)
                 <x-status-badge status="pending" class="whitespace-nowrap" />
+            @elseif ($itemReport->status === 'open')
+                <x-status-badge status="open" :label="$itemReport->type === 'lost' ? 'Masih Dicari' : 'Belum Diklaim'" />
             @else
                 <x-status-badge :status="$itemReport->status" />
             @endif
@@ -53,18 +55,25 @@
                        class="text-sm bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                         Edit Laporan
                     </a>
-                @elseif ($itemReport->status === 'open' && ! $hasPendingClaim)
+                @elseif ($itemReport->type === 'found' && $itemReport->status === 'open' && ! $hasPendingClaim)
                     <a href="{{ route('claims.create', $itemReport) }}"
                        class="text-sm bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700">
                         Ajukan Klaim
                     </a>
+                @elseif ($itemReport->type === 'lost' && $itemReport->status === 'open')
+                    <div class="text-sm text-gray-600">
+                        <p>Barang ini masih dicari pemiliknya. Jika Anda menemukannya, buat laporan Barang Ditemukan agar pemilik dapat mengajukan klaim.</p>
+                        <a href="{{ route('items.create') }}" class="mt-2 inline-block text-brand-600 hover:underline">Laporkan Barang Ditemukan</a>
+                    </div>
                 @elseif ($hasPendingClaim)
                     <span class="text-sm text-amber-700">Klaim sedang menunggu verifikasi admin.</span>
                 @endif
             @else
-                <a href="{{ route('login') }}" class="text-sm text-brand-600 hover:underline">
-                    Masuk untuk mengajukan klaim
-                </a>
+                @if ($itemReport->type === 'found' && $itemReport->status === 'open')
+                    <a href="{{ route('login') }}" class="text-sm text-brand-600 hover:underline">Masuk untuk mengajukan klaim</a>
+                @elseif ($itemReport->type === 'lost' && $itemReport->status === 'open')
+                    <p class="text-sm text-gray-600">Barang ini masih dicari pemiliknya. Jika Anda menemukannya, masuk lalu buat laporan Barang Ditemukan.</p>
+                @endif
             @endauth
         </div>
     </div>

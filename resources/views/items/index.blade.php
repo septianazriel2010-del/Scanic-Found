@@ -61,6 +61,8 @@
                         </span>
                         @if ($report->status === 'open' && $report->has_pending_claim)
                             <x-status-badge status="pending" />
+                        @elseif ($report->status === 'open')
+                            <x-status-badge status="open" :label="$report->type === 'lost' ? 'Masih Dicari' : 'Belum Diklaim'" />
                         @else
                             <x-status-badge :status="$report->status" />
                         @endif
