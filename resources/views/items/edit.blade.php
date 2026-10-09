@@ -5,8 +5,9 @@
 @section('content')
     <h1 class="text-xl font-semibold mb-6">Edit Laporan</h1>
 
-    <form method="POST" action="{{ route('items.update', $itemReport) }}" enctype="multipart/form-data"
-          class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
+        <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
+        <form id="item-report-update" method="POST" action="{{ route('items.update', $itemReport) }}" enctype="multipart/form-data"
+            class="space-y-4">
         @csrf
         @method('PUT')
 
@@ -68,8 +69,10 @@
             <input type="file" name="photo" accept="image/*" class="w-full text-sm text-gray-600">
         </div>
 
+    </form>
+
         <div class="flex items-center gap-3">
-            <button type="submit"
+            <button type="submit" form="item-report-update"
                     class="bg-brand-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-brand-700">
                 Simpan Perubahan
             </button>
@@ -78,8 +81,11 @@
                   onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="text-red-600 text-sm hover:underline">Hapus Laporan</button>
+                <button type="submit"
+                        class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
+                    Hapus Laporan
+                </button>
             </form>
         </div>
-    </form>
+    </div>
 @endsection

@@ -50,7 +50,7 @@
 
         <div class="flex items-center gap-3">
             @auth
-                @if (auth()->id() === $itemReport->user_id)
+                @if (auth()->id() === $itemReport->user_id || auth()->user()->isAdmin())
                     <a href="{{ route('items.edit', $itemReport) }}"
                        class="text-sm bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                         Edit Laporan
