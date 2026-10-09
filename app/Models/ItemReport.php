@@ -87,21 +87,15 @@ class ItemReport extends Model
             return null;
         }
 
-        $diskName = config('filesystems.default');
-        $disk = Storage::disk($diskName);
-
-        if ($diskName === 'supabase') {
-            return $disk->url($this->photo_path);
-        }
-
-        if ($disk->exists($this->photo_path)) {
-            return $disk->url($this->photo_path);
-        }
-
         $publicDisk = Storage::disk('public');
+        if ($publicDisk->exists($this->photo_path)) {
+            return $publicDisk->url($this->photo_path);
+        }
 
-        return $diskName !== 'public' && $publicDisk->exists($this->photo_path)
-            ? $publicDisk->url($this->photo_path)
+        $supabasePublicUrl = config('filesystems.disks.supabase.url');
+
+        return $supabasePublicUrl
+            ? rtrim($supabasePublicUrl, '/').'/'.ltrim($this->photo_path, '/')
             : null;
     }
 

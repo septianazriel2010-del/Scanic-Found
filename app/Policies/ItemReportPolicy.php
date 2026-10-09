@@ -24,10 +24,10 @@ class ItemReportPolicy
         return true;
     }
 
-    /** Hanya pemilik non-admin yang boleh mengubah laporan. */
+    /** Hanya pemilik laporan yang boleh mengubahnya, termasuk admin-pemilik. */
     public function update(User $user, ItemReport $itemReport): bool
     {
-        return $user->id === $itemReport->user_id && ! $user->isAdmin();
+        return $user->id === $itemReport->user_id;
     }
 
     public function delete(User $user, ItemReport $itemReport): bool

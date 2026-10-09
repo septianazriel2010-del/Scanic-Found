@@ -54,9 +54,19 @@ class ItemReportTest extends TestCase
         $this->actingAs($otherUser)
             ->get(route('items.edit', $report))
             ->assertForbidden();
+
+        $this->actingAs($otherUser)
+            ->delete(route('items.destroy', $report))
+            ->assertForbidden();
+
+        $this->actingAs($owner)
+            ->delete(route('items.destroy', $report))
+            ->assertRedirect(route('items.index'));
+
+        $this->assertSoftDeleted($report);
     }
 
-    public function test_admin_can_delete_reports_but_cannot_edit_and_keeps_report_actions(): void
+    public function test_admin_can_edit_own_and_delete_any_reports_while_keeps_report_actions(): void
     {
         $admin = User::factory()->admin()->create();
         $reporter = User::factory()->create();
@@ -70,6 +80,16 @@ class ItemReportTest extends TestCase
             'type' => ItemReport::TYPE_LOST,
             'status' => ItemReport::STATUS_OPEN,
         ]);
+        $adminOwnedReport = ItemReport::factory()->create([
+            'user_id' => $admin->id,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('items.edit', $adminOwnedReport))
+            ->assertOk();
+        $this->get(route('items.show', $adminOwnedReport))
+            ->assertOk()
+            ->assertSee('Edit Laporan');
 
         $this->actingAs($admin)
             ->get(route('items.edit', $foundReport))
@@ -89,6 +109,11 @@ class ItemReportTest extends TestCase
             ->assertRedirect(route('items.index'));
 
         $this->assertSoftDeleted($foundReport);
+
+        $this->delete(route('items.destroy', $adminOwnedReport))
+            ->assertRedirect(route('items.index'));
+
+        $this->assertSoftDeleted($adminOwnedReport);
     }
 
     public function test_admin_can_reopen_closed_report(): void
@@ -144,6 +169,27 @@ class ItemReportTest extends TestCase
             ->assertOk()
             ->assertSee('src="'.$report->photo_url.'"', false)
             ->assertDontSee('>'.$report->photo_path.'<', false);
+    }
+
+    public function test_photo_url_uses_local_file_or_shared_supabase_public_url(): void
+    {
+        Storage::fake('public');
+        config([
+            'filesystems.default' => 'public',
+            'filesystems.disks.supabase.url' => 'https://project.supabase.co/storage/v1/object/public/reports',
+        ]);
+
+        Storage::disk('public')->put('item-reports/local.jpg', 'local image');
+        $localReport = ItemReport::factory()->create(['photo_path' => 'item-reports/local.jpg']);
+
+        $this->assertStringEndsWith('/storage/item-reports/local.jpg', $localReport->photo_url);
+
+        $sharedReport = ItemReport::factory()->create(['photo_path' => 'item-reports/shared.jpg']);
+
+        $this->assertSame(
+            'https://project.supabase.co/storage/v1/object/public/reports/item-reports/shared.jpg',
+            $sharedReport->photo_url,
+        );
     }
 
     public function test_pending_claim_is_visible_and_hides_regular_claim_action(): void
