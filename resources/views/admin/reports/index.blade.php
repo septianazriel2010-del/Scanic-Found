@@ -20,7 +20,14 @@
 
                 <div class="flex items-center gap-3">
                     <x-status-badge :status="$report->status" />
-                    @if ($report->status !== 'closed')
+                    @if ($report->status === 'closed')
+                        <form method="POST" action="{{ route('admin.reports.reopen', $report) }}"
+                              onsubmit="return confirm('Buka kembali laporan ini?')">
+                            @csrf
+                            @method('PATCH')
+                            <button type="submit" class="text-xs text-emerald-700 hover:underline">Buka Kembali</button>
+                        </form>
+                    @else
                         <form method="POST" action="{{ route('admin.reports.close', $report) }}"
                               onsubmit="return confirm('Tutup laporan ini?')">
                             @csrf

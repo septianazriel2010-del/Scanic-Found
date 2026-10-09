@@ -50,12 +50,26 @@
 
         <div class="flex items-center gap-3">
             @auth
-                @if (auth()->id() === $itemReport->user_id || auth()->user()->isAdmin())
+                @if (auth()->id() === $itemReport->user_id && ! auth()->user()->isAdmin())
                     <a href="{{ route('items.edit', $itemReport) }}"
                        class="text-sm bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-900">
                         Edit Laporan
                     </a>
-                @elseif ($itemReport->type === 'found' && $itemReport->status === 'open' && ! $hasPendingClaim)
+                @endif
+
+                @can('delete', $itemReport)
+                    <form method="POST" action="{{ route('items.destroy', $itemReport) }}"
+                          onsubmit="return confirm('Yakin ingin menghapus laporan ini?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                                class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
+                            Hapus Laporan
+                        </button>
+                    </form>
+                @endcan
+
+                @if ($itemReport->type === 'found' && $itemReport->status === 'open' && ! $hasPendingClaim && auth()->id() !== $itemReport->user_id)
                     <a href="{{ route('claims.create', $itemReport) }}"
                        class="text-sm bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700">
                         Ajukan Klaim
@@ -65,7 +79,7 @@
                         <p>Barang ini masih dicari pemiliknya. Jika Anda menemukannya, buat laporan Barang Ditemukan agar pemilik dapat mengajukan klaim.</p>
                         <a href="{{ route('items.create') }}" class="mt-2 inline-block text-brand-600 hover:underline">Laporkan Barang Ditemukan</a>
                     </div>
-                @elseif ($hasPendingClaim)
+                @elseif ($itemReport->type === 'found' && $hasPendingClaim)
                     <span class="text-sm text-amber-700">Klaim sedang menunggu verifikasi admin.</span>
                 @endif
             @else

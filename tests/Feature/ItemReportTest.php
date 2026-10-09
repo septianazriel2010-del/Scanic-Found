@@ -56,6 +56,67 @@ class ItemReportTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_admin_can_delete_reports_but_cannot_edit_and_keeps_report_actions(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $reporter = User::factory()->create();
+        $foundReport = ItemReport::factory()->create([
+            'user_id' => $reporter->id,
+            'type' => ItemReport::TYPE_FOUND,
+            'status' => ItemReport::STATUS_OPEN,
+        ]);
+        $lostReport = ItemReport::factory()->create([
+            'user_id' => $reporter->id,
+            'type' => ItemReport::TYPE_LOST,
+            'status' => ItemReport::STATUS_OPEN,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('items.edit', $foundReport))
+            ->assertForbidden();
+
+        $this->get(route('items.show', $foundReport))
+            ->assertOk()
+            ->assertDontSee('Edit Laporan')
+            ->assertSee('Hapus Laporan')
+            ->assertSee('Ajukan Klaim');
+
+        $this->get(route('items.show', $lostReport))
+            ->assertOk()
+            ->assertSee('Laporkan Barang Ditemukan');
+
+        $this->delete(route('items.destroy', $foundReport))
+            ->assertRedirect(route('items.index'));
+
+        $this->assertSoftDeleted($foundReport);
+    }
+
+    public function test_admin_can_reopen_closed_report(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $otherUser = User::factory()->create();
+        $report = ItemReport::factory()->create([
+            'status' => ItemReport::STATUS_CLOSED,
+        ]);
+
+        $this->actingAs($otherUser)
+            ->patch(route('admin.reports.reopen', $report))
+            ->assertForbidden();
+
+        $this->actingAs($admin)
+            ->get(route('admin.reports.index'))
+            ->assertOk()
+            ->assertSee('Buka Kembali');
+
+        $this->patch(route('admin.reports.reopen', $report))
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('item_reports', [
+            'id' => $report->id,
+            'status' => ItemReport::STATUS_OPEN,
+        ]);
+    }
+
     public function test_uploaded_photo_is_saved_and_rendered_on_report_page(): void
     {
         $disk = config('filesystems.default');

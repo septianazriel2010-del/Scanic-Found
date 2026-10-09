@@ -30,4 +30,11 @@ class ReportController extends Controller
 
         return back()->with('status', 'Laporan ditutup.');
     }
+
+    public function reopen(ItemReport $itemReport): RedirectResponse
+    {
+        $itemReport->update(['status' => ItemReport::STATUS_OPEN]);
+
+        return back()->with('status', 'Laporan dibuka kembali.');
+    }
 }

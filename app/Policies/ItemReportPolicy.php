@@ -24,13 +24,10 @@ class ItemReportPolicy
         return true;
     }
 
-    /**
-     * Hanya pemilik laporan atau admin yang boleh mengubah.
-     * Ini mencegah IDOR: user A tidak bisa edit laporan milik user B.
-     */
+    /** Hanya pemilik non-admin yang boleh mengubah laporan. */
     public function update(User $user, ItemReport $itemReport): bool
     {
-        return $user->id === $itemReport->user_id || $user->isAdmin();
+        return $user->id === $itemReport->user_id && ! $user->isAdmin();
     }
 
     public function delete(User $user, ItemReport $itemReport): bool

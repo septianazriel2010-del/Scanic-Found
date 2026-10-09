@@ -83,6 +83,7 @@ Route::middleware(['auth', 'role:admin'])
 
         Route::get('/laporan', [AdminReportController::class, 'index'])->name('reports.index');
         Route::patch('/laporan/{itemReport}/tutup', [AdminReportController::class, 'close'])->name('reports.close');
+        Route::patch('/laporan/{itemReport}/buka-kembali', [AdminReportController::class, 'reopen'])->name('reports.reopen');
 
         Route::get('/klaim', [AdminClaimController::class, 'index'])->name('claims.index');
         Route::get('/klaim/{claim}', [AdminClaimController::class, 'show'])->name('claims.show');
