@@ -8,3 +8,4 @@ vendor
 public/build
 storage/logs/*
 !storage/logs/.gitignore
+storage/app/public
