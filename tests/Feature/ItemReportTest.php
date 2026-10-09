@@ -192,6 +192,62 @@ class ItemReportTest extends TestCase
         );
     }
 
+    public function test_legacy_photo_paths_resolve_to_the_configured_supabase_public_url(): void
+    {
+        Storage::fake('public');
+        config([
+            'filesystems.default' => 'supabase',
+            'filesystems.disks.supabase.url' => 'https://ujvimmmycxwbxosefjoz.storage.supabase.co/storage/v1/object/public/scanic-trace',
+        ]);
+
+        $manualObject = ItemReport::factory()->make(['photo_path' => 'food.jpg']);
+        $this->assertSame(
+            'https://ujvimmmycxwbxosefjoz.storage.supabase.co/storage/v1/object/public/scanic-trace/food.jpg',
+            $manualObject->photo_url,
+        );
+
+        $legacyLocalUrl = ItemReport::factory()->make([
+            'photo_path' => 'http://127.0.0.1:8000/storage/item-reports/food.jpg',
+        ]);
+        $this->assertSame(
+            'https://ujvimmmycxwbxosefjoz.storage.supabase.co/storage/v1/object/public/scanic-trace/item-reports/food.jpg',
+            $legacyLocalUrl->photo_url,
+        );
+
+        $legacySupabaseUrl = ItemReport::factory()->make([
+            'photo_path' => 'https://ujvimmmycxwbxosefjoz.supabase.co/storage/v1/object/public/scanic-trace/food.jpg',
+        ]);
+        $this->assertSame($manualObject->photo_url, $legacySupabaseUrl->photo_url);
+
+        $failedUpload = ItemReport::factory()->make(['photo_path' => '0']);
+        $this->assertNull($failedUpload->photo_url);
+    }
+
+    public function test_failed_photo_upload_does_not_create_a_report_with_a_false_path(): void
+    {
+        $disk = \Mockery::mock(\Illuminate\Filesystem\FilesystemAdapter::class);
+        $disk->shouldReceive('putFileAs')->once()->andReturn(false);
+        Storage::shouldReceive('disk')->with('public')->once()->andReturn($disk);
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->from(route('items.create'))
+            ->post(route('items.store'), [
+                'type' => 'found',
+                'title' => 'Foto gagal disimpan',
+                'description' => 'Laporan ini tidak boleh dibuat tanpa menyimpan fotonya.',
+                'category' => 'Elektronik',
+                'location' => 'Kantin',
+                'incident_date' => now()->toDateString(),
+                'photo' => UploadedFile::fake()->create('food.jpg', 100, 'image/jpeg'),
+            ])
+            ->assertRedirect(route('items.create'))
+            ->assertSessionHasErrors('photo');
+
+        $this->assertDatabaseMissing('item_reports', ['title' => 'Foto gagal disimpan']);
+    }
+
     public function test_pending_claim_is_visible_and_hides_regular_claim_action(): void
     {
         $reporter = User::factory()->create();

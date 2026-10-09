@@ -83,19 +83,34 @@ class ItemReport extends Model
 
     public function getPhotoUrlAttribute(): ?string
     {
-        if (! $this->photo_path) {
+        $photoPath = trim((string) $this->photo_path);
+        if ($photoPath === '' || $photoPath === '0') {
+            return null;
+        }
+
+        $photoPath = parse_url($photoPath, PHP_URL_PATH) ?: $photoPath;
+        $photoPath = rawurldecode($photoPath);
+
+        if (preg_match('#/storage/v1/object/public/[^/]+/(.+)$#', $photoPath, $matches)) {
+            $photoPath = $matches[1];
+        } else {
+            $photoPath = preg_replace('#^/?(?:storage/(?:app/public/)?|public/storage/)#', '', $photoPath);
+        }
+
+        $photoPath = ltrim($photoPath, '/');
+        if ($photoPath === '') {
             return null;
         }
 
         $publicDisk = Storage::disk('public');
-        if ($publicDisk->exists($this->photo_path)) {
-            return $publicDisk->url($this->photo_path);
+        if ($publicDisk->exists($photoPath)) {
+            return $publicDisk->url($photoPath);
         }
 
         $supabasePublicUrl = config('filesystems.disks.supabase.url');
 
         return $supabasePublicUrl
-            ? rtrim($supabasePublicUrl, '/').'/'.ltrim($this->photo_path, '/')
+            ? rtrim($supabasePublicUrl, '/').'/'.$photoPath
             : null;
     }
 

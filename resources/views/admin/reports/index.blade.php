@@ -10,7 +10,7 @@
             <div class="flex items-center justify-between px-4 py-3">
                 <a href="{{ route('items.show', $report) }}" class="flex min-w-0 items-center gap-3 hover:text-brand-600">
                     @if ($report->photo_url)
-                        <img src="{{ $report->photo_url }}" alt="" class="h-12 w-12 shrink-0 rounded border border-gray-200 object-cover">
+                        <img src="{{ $report->photo_url }}" alt="" onerror="this.remove()" class="h-12 w-12 shrink-0 rounded border border-gray-200 object-cover">
                     @endif
                     <span class="min-w-0">
                         <span class="block font-medium text-gray-800">{{ $report->title }}</span>

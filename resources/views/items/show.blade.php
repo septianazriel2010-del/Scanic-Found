@@ -24,6 +24,7 @@
 
         @if ($itemReport->photo_url)
             <img src="{{ $itemReport->photo_url }}" alt="{{ $itemReport->title }}"
+                 onerror="this.remove()"
                  class="rounded-lg mb-4 max-h-80 max-w-full border border-gray-200 object-cover">
         @endif
 

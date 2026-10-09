@@ -36,7 +36,7 @@
                     <li class="py-2 flex items-center justify-between gap-3">
                         <a href="{{ route('items.show', $report) }}" class="flex min-w-0 items-center gap-3 hover:text-brand-600">
                             @if ($report->photo_url)
-                                <img src="{{ $report->photo_url }}" alt="" class="h-10 w-10 shrink-0 rounded border border-gray-200 object-cover">
+                                <img src="{{ $report->photo_url }}" alt="" onerror="this.remove()" class="h-10 w-10 shrink-0 rounded border border-gray-200 object-cover">
                             @endif
                             <span class="truncate">{{ $report->title }}</span>
                         </a>

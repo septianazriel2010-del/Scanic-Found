@@ -70,6 +70,7 @@
 
                     @if ($report->photo_url)
                         <img src="{{ $report->photo_url }}" alt="Foto {{ $report->title }}"
+                             onerror="this.remove()"
                              class="mb-3 h-36 w-full rounded-lg border border-gray-200 object-cover">
                     @endif
 
