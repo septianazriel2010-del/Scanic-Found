@@ -87,16 +87,22 @@ class ItemReport extends Model
             return null;
         }
 
-        $diskNames = array_unique([config('filesystems.default'), 'public']);
+        $diskName = config('filesystems.default');
+        $disk = Storage::disk($diskName);
 
-        foreach ($diskNames as $diskName) {
-            $disk = Storage::disk($diskName);
-            if ($disk->exists($this->photo_path)) {
-                return $disk->url($this->photo_path);
-            }
+        if ($diskName === 'supabase') {
+            return $disk->url($this->photo_path);
         }
 
-        return null;
+        if ($disk->exists($this->photo_path)) {
+            return $disk->url($this->photo_path);
+        }
+
+        $publicDisk = Storage::disk('public');
+
+        return $diskName !== 'public' && $publicDisk->exists($this->photo_path)
+            ? $publicDisk->url($this->photo_path)
+            : null;
     }
 
     /** Pelapor (siswa/guru/staf/admin) yang membuat laporan ini. */
