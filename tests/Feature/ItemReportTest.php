@@ -248,6 +248,41 @@ class ItemReportTest extends TestCase
         $this->assertDatabaseMissing('item_reports', ['title' => 'Foto gagal disimpan']);
     }
 
+    public function test_storage_sync_command_preserves_paths_skips_existing_files_and_supports_dry_run(): void
+    {
+        Storage::fake('public');
+        Storage::fake('supabase');
+
+        Storage::disk('public')->put('item-reports/food.jpg', 'new image');
+        Storage::disk('public')->put('item-reports/existing.jpg', 'local image');
+        Storage::disk('supabase')->put('item-reports/existing.jpg', 'existing remote image');
+
+        $this->artisan('storage:sync-supabase --dry-run')
+            ->expectsOutputToContain('Would sync: item-reports/food.jpg')
+            ->assertSuccessful();
+
+        Storage::disk('supabase')->assertMissing('item-reports/food.jpg');
+
+        $this->artisan('storage:sync-supabase')
+            ->expectsOutputToContain('Synced: item-reports/food.jpg')
+            ->expectsOutputToContain('Skipped existing object: item-reports/existing.jpg')
+            ->assertSuccessful();
+
+        Storage::disk('supabase')->assertExists('item-reports/food.jpg');
+        $this->assertSame(
+            'existing remote image',
+            Storage::disk('supabase')->get('item-reports/existing.jpg'),
+        );
+
+        Storage::disk('public')->put('item-reports/existing.jpg', 'replacement image');
+        $this->artisan('storage:sync-supabase --overwrite')->assertSuccessful();
+
+        $this->assertSame(
+            'replacement image',
+            Storage::disk('supabase')->get('item-reports/existing.jpg'),
+        );
+    }
+
     public function test_pending_claim_is_visible_and_hides_regular_claim_action(): void
     {
         $reporter = User::factory()->create();

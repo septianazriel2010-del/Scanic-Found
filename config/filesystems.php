@@ -29,7 +29,7 @@ return [
             'key' => env('SUPABASE_S3_ACCESS_KEY_ID'),
             'secret' => env('SUPABASE_S3_SECRET_ACCESS_KEY'),
             'region' => env('SUPABASE_S3_REGION', 'ap-southeast-1'),
-            'bucket' => env('SUPABASE_S3_BUCKET', 'scanic-trace'),
+            'bucket' => env('SUPABASE_S3_BUCKET'),
             'endpoint' => env('SUPABASE_S3_ENDPOINT'),
             'url' => env('SUPABASE_S3_PUBLIC_URL'),
             'use_path_style_endpoint' => true,

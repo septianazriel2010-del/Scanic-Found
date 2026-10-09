@@ -224,7 +224,7 @@ runtime PHP komunitas yang lama/tidak resmi).
    SUPABASE_S3_REGION=ap-southeast-1
    SUPABASE_S3_BUCKET=scanic-trace
    SUPABASE_S3_ENDPOINT=https://xxxxxxxxxxxx.supabase.co/storage/v1/s3
-   SUPABASE_S3_PUBLIC_URL=https://xxxxxxxxxxxx.supabase.co/storage/v1/object/public/scanic-trace
+  SUPABASE_S3_PUBLIC_URL=https://xxxxxxxxxxxx.storage.supabase.co/storage/v1/object/public/scanic-trace
    ```
    Contoh pakai CLI untuk satu variabel: `vercel env add APP_KEY`.
 
@@ -251,6 +251,21 @@ runtime PHP komunitas yang lama/tidak resmi).
    ```
    Atau hubungkan repo GitHub `Scanic-Found` ke Vercel dashboard supaya
    auto-deploy tiap `git push`.
+
+### Sync foto lokal ke Supabase Storage
+
+Upload lokal dengan `FILESYSTEM_DISK=public` hanya tersimpan di komputer lokal.
+Untuk memindahkan foto yang sudah ada tanpa mengubah `photo_path` di database,
+isi kredensial `SUPABASE_S3_*` di `.env` lokal, lalu jalankan:
+
+```bash
+php artisan storage:sync-supabase --dry-run
+php artisan storage:sync-supabase
+```
+
+Command menyalin JPG, JPEG, PNG, WEBP, dan GIF dari `storage/app/public` dengan
+path yang sama, melewati object yang sudah ada, dan tidak menghapus file lokal.
+Gunakan `--overwrite` hanya jika object di Supabase memang perlu diganti.
 
 ### Batasan yang perlu lo tahu
 
