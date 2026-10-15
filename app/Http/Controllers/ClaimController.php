@@ -21,7 +21,7 @@ class ClaimController extends Controller
     public function index(Request $request): View
     {
         $claims = $request->user()->claims()
-            ->with('itemReport')
+            ->with(['itemReport' => fn ($query) => $query->withTrashed()])
             ->latest()
             ->paginate(10);
 
@@ -83,7 +83,12 @@ class ClaimController extends Controller
     {
         $this->authorize('view', $claim);
 
-        $claim->load(['itemReport', 'claimant', 'reviewer', 'handover']);
+        $claim->load([
+            'itemReport' => fn ($query) => $query->withTrashed(),
+            'claimant',
+            'reviewer',
+            'handover',
+        ]);
 
         return view('claims.show', compact('claim'));
     }

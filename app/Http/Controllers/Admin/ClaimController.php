@@ -24,7 +24,10 @@ class ClaimController extends Controller
         $status = $request->string('status')->toString() ?: null;
 
         $claims = Claim::query()
-            ->with(['itemReport', 'claimant'])
+            ->with([
+                'itemReport' => fn ($query) => $query->withTrashed(),
+                'claimant',
+            ])
             ->when($status, fn ($q) => $q->where('status', $status))
             ->latest()
             ->paginate(10)
@@ -37,7 +40,13 @@ class ClaimController extends Controller
     {
         $this->authorize('review', $claim);
 
-        $claim->load(['itemReport.user', 'claimant', 'reviewer', 'handover']);
+        $claim->load([
+            'itemReport' => fn ($query) => $query->withTrashed(),
+            'itemReport.user',
+            'claimant',
+            'reviewer',
+            'handover',
+        ]);
 
         return view('admin.claims.show', compact('claim'));
     }

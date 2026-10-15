@@ -24,7 +24,10 @@ class DashboardController extends Controller
         ];
 
         $recentReports = ItemReport::with('user')->latest()->limit(5)->get();
-        $pendingClaims = Claim::with(['itemReport', 'claimant'])
+        $pendingClaims = Claim::with([
+            'itemReport' => fn ($query) => $query->withTrashed(),
+            'claimant',
+        ])
             ->where('status', Claim::STATUS_PENDING)
             ->latest()
             ->limit(5)

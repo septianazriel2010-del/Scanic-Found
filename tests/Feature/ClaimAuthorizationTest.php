@@ -144,6 +144,46 @@ class ClaimAuthorizationTest extends TestCase
             ->assertSee('XI PPLG 2');
     }
 
+    public function test_claim_pages_show_the_item_report_even_after_it_is_soft_deleted(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $claimant = User::factory()->create();
+        $report = ItemReport::factory()->create([
+            'title' => 'Laporan yang dihapus',
+        ]);
+        $claim = Claim::create([
+            'item_report_id' => $report->id,
+            'claimant_id' => $claimant->id,
+            'claimant_full_name' => $claimant->name,
+            'proof_details' => 'Ciri barang dapat diverifikasi oleh admin.',
+            'status' => Claim::STATUS_PENDING,
+        ]);
+
+        $report->delete();
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Laporan yang dihapus');
+
+        $this->get(route('admin.claims.index'))
+            ->assertOk()
+            ->assertSee('Laporan yang dihapus');
+
+        $this->get(route('admin.claims.show', $claim))
+            ->assertOk()
+            ->assertSee('Laporan yang dihapus');
+
+        $this->actingAs($claimant)
+            ->get(route('claims.index'))
+            ->assertOk()
+            ->assertSee('Laporan yang dihapus');
+
+        $this->get(route('claims.show', $claim))
+            ->assertOk()
+            ->assertSee('Laporan yang dihapus');
+    }
+
     public function test_admin_approval_updates_claim_and_handover_updates_report(): void
     {
         $admin = User::factory()->admin()->create();
