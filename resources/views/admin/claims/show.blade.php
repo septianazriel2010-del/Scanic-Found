@@ -5,7 +5,7 @@
 @section('content')
     <a href="{{ route('admin.claims.index') }}" class="text-sm text-brand-600 hover:underline">&larr; Kembali</a>
 
-    <div class="bg-white border border-gray-200 rounded-xl p-6 mt-4 max-w-2xl space-y-6">
+    <div class="bg-surface border border-gray-200 rounded-xl p-6 mt-4 max-w-2xl space-y-6">
         <div class="flex items-center justify-between">
             <h1 class="text-lg font-semibold">{{ $claim->itemReport->title }}</h1>
             <x-status-badge :status="$claim->status" />

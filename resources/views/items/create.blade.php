@@ -6,7 +6,7 @@
     <h1 class="text-xl font-semibold mb-6">Buat Laporan Barang</h1>
 
     <form method="POST" action="{{ route('items.store') }}" enctype="multipart/form-data"
-          class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
+          class="bg-surface border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
         @csrf
 
         <div>

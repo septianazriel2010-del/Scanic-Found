@@ -6,14 +6,14 @@
     <title>@yield('title', 'SCANIC TRACE')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+<body class="min-h-screen bg-canvas flex items-center justify-center px-4">
     <div class="w-full max-w-md">
         <div class="text-center mb-6">
             <a href="{{ route('items.index') }}" class="whitespace-nowrap text-base font-semibold text-gray-800 sm:text-lg">SCANIC TRACE</a>
             <p class="text-sm text-gray-500 mt-1">Sistem Lost &amp; Found Sekolah</p>
         </div>
 
-        <div class="bg-white shadow-sm border border-gray-200 rounded-xl p-6">
+        <div class="bg-surface shadow-sm border border-gray-200 rounded-xl p-6">
             <x-alert />
             @yield('content')
         </div>

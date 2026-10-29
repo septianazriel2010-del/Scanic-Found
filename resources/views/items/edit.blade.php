@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="text-xl font-semibold mb-6">Edit Laporan</h1>
 
-        <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
+        <div class="bg-surface border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
         <form id="item-report-update" method="POST" action="{{ route('items.update', $itemReport) }}" enctype="multipart/form-data"
             class="space-y-4">
         @csrf
@@ -82,7 +82,7 @@
                 @csrf
                 @method('DELETE')
                 <button type="submit"
-                        class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
+                        class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-surface px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
                     Hapus Laporan
                 </button>
             </form>

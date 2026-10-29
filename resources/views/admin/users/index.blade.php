@@ -10,7 +10,7 @@
                class="rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500 w-full sm:w-80">
     </form>
 
-    <div class="bg-white border border-gray-200 rounded-xl overflow-x-auto">
+    <div class="bg-surface border border-gray-200 rounded-xl overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-left text-gray-500">
                 <tr>

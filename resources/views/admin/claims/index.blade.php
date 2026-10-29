@@ -14,7 +14,7 @@
         @endforeach
     </div>
 
-    <div class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+    <div class="bg-surface border border-gray-200 rounded-xl divide-y divide-gray-100">
         @forelse ($claims as $claim)
             <a href="{{ route('admin.claims.show', $claim) }}" class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">
                 <div>

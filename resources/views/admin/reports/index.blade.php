@@ -5,7 +5,7 @@
 @section('content')
     <h1 class="text-xl font-semibold mb-6">Kelola Laporan</h1>
 
-    <div class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+    <div class="bg-surface border border-gray-200 rounded-xl divide-y divide-gray-100">
         @forelse ($itemReports as $report)
             <div class="flex items-center justify-between px-4 py-3">
                 <a href="{{ route('items.show', $report) }}" class="flex min-w-0 items-center gap-3 hover:text-brand-600">

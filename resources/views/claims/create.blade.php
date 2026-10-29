@@ -9,7 +9,7 @@
     </p>
 
     <form method="POST" action="{{ route('claims.store', $itemReport) }}"
-          class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
+          class="bg-surface border border-gray-200 rounded-xl p-6 space-y-4 max-w-2xl">
         @csrf
 
         <div>

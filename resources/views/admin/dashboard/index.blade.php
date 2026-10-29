@@ -21,7 +21,7 @@
             'Sudah Dikembalikan' => $stats['returned_reports'],
             'Total Pengguna' => $stats['total_users'],
         ] as $label => $value)
-            <div class="bg-white border border-gray-200 rounded-xl p-4">
+            <div class="bg-surface border border-gray-200 rounded-xl p-4">
                 <p class="text-2xl font-semibold text-brand-600">{{ $value }}</p>
                 <p class="text-xs text-gray-500 mt-1">{{ $label }}</p>
             </div>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
+        <div class="bg-surface border border-gray-200 rounded-xl p-4">
             <h2 class="font-medium mb-3">Laporan Terbaru</h2>
             <ul class="divide-y divide-gray-100 text-sm">
                 @forelse ($recentReports as $report)
@@ -48,7 +48,7 @@
             </ul>
         </div>
 
-        <div class="bg-white border border-gray-200 rounded-xl p-4">
+        <div class="bg-surface border border-gray-200 rounded-xl p-4">
             <h2 class="font-medium mb-3">Klaim Menunggu Verifikasi</h2>
             <ul class="divide-y divide-gray-100 text-sm">
                 @forelse ($pendingClaims as $claim)

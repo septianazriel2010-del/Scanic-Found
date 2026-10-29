@@ -1,4 +1,4 @@
-<header class="bg-white border-b border-gray-200">
+<header class="bg-surface border-b border-gray-200">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
         <a href="{{ route('items.index') }}" class="whitespace-nowrap text-sm font-semibold text-gray-800 sm:text-base">
             SCANIC TRACE

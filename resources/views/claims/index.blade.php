@@ -8,7 +8,7 @@
     @if ($claims->isEmpty())
         <p class="text-gray-500 text-sm">Anda belum mengajukan klaim apa pun.</p>
     @else
-        <div class="bg-white border border-gray-200 rounded-xl divide-y divide-gray-100">
+        <div class="bg-surface border border-gray-200 rounded-xl divide-y divide-gray-100">
             @foreach ($claims as $claim)
                 <a href="{{ route('claims.show', $claim) }}"
                    class="flex items-center justify-between px-4 py-3 hover:bg-gray-50">

@@ -16,6 +16,13 @@ export default {
                     600: '#2f4bc7',
                     700: '#263ea0',
                 },
+                canvas: '#f3f1eb',
+                surface: '#faf9f6',
+                gray: {
+                    50: '#f3f1eb',
+                    100: '#eeece6',
+                    200: '#e4e0d7',
+                },
             },
         },
     },

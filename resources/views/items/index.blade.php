@@ -14,7 +14,7 @@
     </div>
 
     <form method="GET" action="{{ route('items.index') }}"
-          class="bg-white border border-gray-200 rounded-xl p-4 mb-6 grid grid-cols-1 sm:grid-cols-5 gap-3">
+          class="bg-surface border border-gray-200 rounded-xl p-4 mb-6 grid grid-cols-1 sm:grid-cols-5 gap-3">
         <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul/deskripsi..."
                class="sm:col-span-2 rounded-lg text-sm focus:border-brand-500 focus:ring-brand-500">
 
@@ -54,7 +54,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             @foreach ($itemReports as $report)
                 <a href="{{ route('items.show', $report) }}"
-                   class="block bg-white border border-gray-200 rounded-xl p-4 hover:shadow-md transition">
+                   class="block bg-surface border border-gray-200 rounded-xl p-4 hover:shadow-md transition">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-medium px-2 py-1 rounded-full {{ $report->type === 'lost' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }}">
                             {{ $report->type === 'lost' ? 'Hilang' : 'Ditemukan' }}

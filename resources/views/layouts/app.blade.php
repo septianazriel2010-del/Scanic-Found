@@ -6,7 +6,7 @@
     <title>@yield('title', 'SCANIC TRACE') - Lost &amp; Found Sekolah</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="min-h-screen bg-gray-50 text-gray-800 flex flex-col">
+<body class="min-h-screen bg-canvas text-gray-800 flex flex-col">
 
     <x-nav />
 
@@ -16,7 +16,7 @@
         @yield('content')
     </main>
 
-    <footer class="border-t border-gray-200 bg-white">
+    <footer class="border-t border-gray-200 bg-surface">
         <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500 flex flex-col sm:flex-row justify-between gap-2">
             <span>&copy; {{ date('Y') }} SCANIC TRACE &mdash; Sistem Lost &amp; Found Sekolah</span>
             <span>Dibangun dengan Laravel</span>

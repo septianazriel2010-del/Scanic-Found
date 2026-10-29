@@ -7,7 +7,13 @@
 	select,
 	textarea,
 	button {
-		border: 1px solid #d1d5db;
+		border: 1px solid #d6d3cb;
+	}
+
+	input,
+	select,
+	textarea {
+		background-color: #faf9f6;
 	}
 
 	input:focus,

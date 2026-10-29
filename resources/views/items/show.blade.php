@@ -5,7 +5,7 @@
 @section('content')
     <a href="{{ route('items.index') }}" class="text-sm text-brand-600 hover:underline">&larr; Kembali ke daftar</a>
 
-    <div class="bg-white border border-gray-200 rounded-xl p-6 mt-4">
+    <div class="bg-surface border border-gray-200 rounded-xl p-6 mt-4">
         <div class="flex items-center justify-between mb-3">
             <span class="text-xs font-medium px-2 py-1 rounded-full {{ $itemReport->type === 'lost' ? 'bg-red-50 text-red-600' : 'bg-blue-50 text-blue-600' }}">
                 {{ $itemReport->type === 'lost' ? 'Barang Hilang' : 'Barang Ditemukan' }}
@@ -64,7 +64,7 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit"
-                                class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
+                                class="inline-flex items-center justify-center rounded-lg border border-red-200 bg-surface px-3 py-2 text-sm font-medium text-red-700 transition-colors duration-150 hover:border-red-300 hover:bg-red-50 hover:text-red-800 active:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2">
                             Hapus Laporan
                         </button>
                     </form>
