@@ -8,6 +8,7 @@ use App\Models\ItemReport;
 use App\Services\ItemReportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class ItemReportController extends Controller
@@ -17,7 +18,7 @@ class ItemReportController extends Controller
     }
 
     /** Daftar laporan + search & filter, bisa diakses tanpa login. */
-    public function index(Request $request): View
+    public function index(Request $request): View|Response
     {
         $itemReports = ItemReport::query()
             ->with('user')
@@ -36,6 +37,10 @@ class ItemReportController extends Controller
         // supaya tidak perlu tabel master terpisah untuk MVP ini.
         $categories = ItemReport::query()->distinct()->orderBy('category')->pluck('category');
         $locations = ItemReport::query()->distinct()->orderBy('location')->pluck('location');
+
+        if ($request->ajax()) {
+            return response()->view('items.partials.results', compact('itemReports'));
+        }
 
         return view('items.index', compact('itemReports', 'categories', 'locations'));
     }

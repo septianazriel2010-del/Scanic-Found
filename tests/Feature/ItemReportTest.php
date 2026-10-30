@@ -20,6 +20,35 @@ class ItemReportTest extends TestCase
         $this->get(route('items.index'))->assertOk();
     }
 
+    public function test_ajax_search_returns_only_the_matching_results_fragment(): void
+    {
+        ItemReport::factory()->create([
+            'title' => 'Kunci merah',
+            'type' => ItemReport::TYPE_LOST,
+            'category' => 'Elektronik',
+            'location' => 'Kantin',
+        ]);
+        ItemReport::factory()->create([
+            'title' => 'Kunci biru',
+            'type' => ItemReport::TYPE_FOUND,
+            'category' => 'Dompet',
+            'location' => 'Perpustakaan',
+        ]);
+
+        $this->get(route('items.index', [
+            'q' => 'Kunci',
+            'type' => ItemReport::TYPE_LOST,
+            'category' => 'Elektronik',
+            'location' => 'Kantin',
+        ]), [
+            'X-Requested-With' => 'XMLHttpRequest',
+        ])
+            ->assertOk()
+            ->assertSee('Kunci merah')
+            ->assertDontSee('Kunci biru')
+            ->assertDontSee('<html', false);
+    }
+
     public function test_guest_cannot_create_item_report(): void
     {
         $this->get(route('items.create'))->assertRedirect(route('login'));
